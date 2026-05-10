@@ -29,7 +29,7 @@ export class TokensService {
 		res.cookie(tokenType, token, {
 			httpOnly: tokenType === TokenType.REFRESH,
 			secure: isProduction,
-			sameSite: 'lax',
+			sameSite: isProduction ? 'none' : 'lax',
 			maxAge: day * 24 * 60 * 60 * 1000,
 		})
 	}
