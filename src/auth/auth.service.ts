@@ -31,6 +31,7 @@ export class AuthService {
 		return {
 			status: 'success',
 			message: 'Успешный вход',
+			accessToken,
 		}
 	}
 

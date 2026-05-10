@@ -8,7 +8,7 @@ import { Cart, CartDocument } from './schemas/cart.schema'
 export class CartService {
 	constructor(
 		@InjectModel(Cart.name) private cartModel: Model<CartDocument>
-	) {}
+	) { }
 
 	async getCart(userId: string) {
 		let cart = await this.cartModel
