@@ -74,6 +74,7 @@ export class AuthService {
 		return {
 			status: 'success',
 			message: 'Пользователь успешно зарегистрирован',
+			accessToken,
 		}
 	}
 
@@ -116,6 +117,7 @@ export class AuthService {
 		return {
 			status: 'success',
 			message: 'Токен обновлён',
+			accessToken,
 		}
 	}
 

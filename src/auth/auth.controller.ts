@@ -24,7 +24,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard'
 @ApiTags('Авторизация')
 @Controller('api/v1/auth')
 export class AuthController {
-	constructor(private authService: AuthService) {}
+	constructor(private authService: AuthService) { }
 
 	@ApiOperation({ summary: 'Вход в аккаунт' })
 	@ApiBody({ type: LoginUserDto })
@@ -32,7 +32,7 @@ export class AuthController {
 		status: 200,
 		description: 'Успешный вход. Токены устанавливаются в cookies.',
 		schema: {
-			example: { status: 'success', message: 'Успешный вход' },
+			example: { status: 'success', message: 'Успешный вход', accessToken: '...' },
 		},
 	})
 	@ApiResponse({ status: 400, description: 'Неверный логин/email или пароль' })
@@ -51,7 +51,7 @@ export class AuthController {
 		status: 201,
 		description: 'Пользователь успешно зарегистрирован. Токены устанавливаются в cookies.',
 		schema: {
-			example: { status: 'success', message: 'Пользователь успешно зарегистрирован' },
+			example: { status: 'success', message: 'Пользователь успешно зарегистрирован', accessToken: '...' },
 		},
 	})
 	@ApiResponse({ status: 400, description: 'Логин или Email уже заняты / Ошибки валидации' })
@@ -69,7 +69,7 @@ export class AuthController {
 		status: 200,
 		description: 'Токен успешно обновлён',
 		schema: {
-			example: { status: 'success', message: 'Токен обновлён' },
+			example: { status: 'success', message: 'Токен обновлён', accessToken: '...' },
 		},
 	})
 	@ApiResponse({ status: 401, description: 'Не авторизован / Токен недействителен' })
