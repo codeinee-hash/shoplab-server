@@ -9,7 +9,7 @@ export enum TokenType {
 
 @Injectable()
 export class TokensService {
-	constructor(private jwtService: JwtService) {}
+	constructor(private jwtService: JwtService) { }
 
 	generateTokens(payload: { _id: string; login: string; email: string; role: string }) {
 		const accessToken = this.jwtService.sign(payload, {
@@ -24,10 +24,11 @@ export class TokensService {
 	}
 
 	setRefreshTokenCookie(res: Response, tokenType: TokenType, token: string) {
+		const isProduction = process.env.NODE_ENV === 'production'
 		const day = tokenType === TokenType.ACCESS ? 2 : 7
 		res.cookie(tokenType, token, {
 			httpOnly: tokenType === TokenType.REFRESH,
-			secure: true,
+			secure: isProduction,
 			sameSite: 'lax',
 			maxAge: day * 24 * 60 * 60 * 1000,
 		})
@@ -43,9 +44,10 @@ export class TokensService {
 	}
 
 	removeTokens(res: Response) {
+		const isProduction = process.env.NODE_ENV === 'production'
 		const cookieOptions: CookieOptions = {
 			httpOnly: true,
-			secure: true,
+			secure: isProduction,
 			sameSite: 'strict',
 		}
 
