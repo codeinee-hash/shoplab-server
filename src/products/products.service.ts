@@ -1,13 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
+import { FavoritesService } from 'src/favorites/favorites.service'
 import { CreateProductDto, ProductQueryDto, UpdateProductDto } from './dto/product.dto'
 import { Product, ProductDocument } from './schemas/product.schema'
 
 @Injectable()
 export class ProductsService {
 	constructor(
-		@InjectModel(Product.name) private productModel: Model<ProductDocument>
+		@InjectModel(Product.name) private productModel: Model<ProductDocument>,
+		private favoritesService: FavoritesService
 	) {}
 
 	async create(dto: CreateProductDto) {
@@ -20,7 +22,7 @@ export class ProductsService {
 		}
 	}
 
-	async findAll(query: ProductQueryDto) {
+	async findAll(query: ProductQueryDto, userId?: string) {
 		const filter: FilterQuery<ProductDocument> = {}
 
 		// Поиск по названию
@@ -65,9 +67,22 @@ export class ProductsService {
 			this.productModel.countDocuments(filter),
 		])
 
+		// Получаем список избранных товаров пользователя (если авторизован)
+		const favoriteIds = userId
+			? await this.favoritesService.getUserFavoriteIds(userId)
+			: []
+
+		const productsWithFavorite = products.map((product) => {
+			const productObj = product.toObject()
+			return {
+				...productObj,
+				isFavorite: favoriteIds.includes(String(productObj._id)),
+			}
+		})
+
 		return {
 			status: 'success',
-			data: products,
+			data: productsWithFavorite,
 			pagination: {
 				total,
 				page,
@@ -77,15 +92,22 @@ export class ProductsService {
 		}
 	}
 
-	async findById(id: string) {
+	async findById(id: string, userId?: string) {
 		const product = await this.productModel.findById(id).populate('category', 'name')
 		if (!product) {
 			throw new HttpException('Товар не найден', HttpStatus.NOT_FOUND)
 		}
 
+		const favoriteIds = userId
+			? await this.favoritesService.getUserFavoriteIds(userId)
+			: []
+
 		return {
 			status: 'success',
-			data: product,
+			data: {
+				...product.toObject(),
+				isFavorite: favoriteIds.includes(String(product._id)),
+			},
 		}
 	}
 

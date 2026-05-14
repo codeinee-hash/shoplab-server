@@ -61,6 +61,16 @@ export class FavoritesService {
 		}
 	}
 
+	async getUserFavoriteIds(userId: string): Promise<string[]> {
+		const favorites = await this.favoritesModel.findOne({ user: userId }).exec()
+
+		if (!favorites) {
+			return []
+		}
+
+		return favorites.products.map((p) => p.toString())
+	}
+
 	async removeFromFavorites(userId: string, productId: string) {
 		const favorites = await this.favoritesModel.findOne({ user: userId })
 

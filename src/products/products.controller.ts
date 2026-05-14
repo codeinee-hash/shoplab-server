@@ -7,6 +7,7 @@ import {
 	Patch,
 	Post,
 	Query,
+	Req,
 	UseGuards,
 	UsePipes,
 } from '@nestjs/common'
@@ -18,8 +19,10 @@ import {
 	ApiResponse,
 	ApiTags,
 } from '@nestjs/swagger'
+import { Request } from 'express'
 import { AdminGuard } from 'src/auth/guards/admin.guard'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { OptionalJwtAuthGuard } from 'src/auth/guards/optional-jwt-auth.guard'
 import { ValidationPipe } from 'src/pipes/validation.pipe'
 import {
 	CreateProductDto,
@@ -61,18 +64,22 @@ export class ProductsController {
 			},
 		},
 	})
+	@UseGuards(OptionalJwtAuthGuard)
 	@Get('/products')
-	findAll(@Query() query: ProductQueryDto) {
-		return this.productsService.findAll(query)
+	findAll(@Query() query: ProductQueryDto, @Req() req: Request) {
+		const userId = (req as any).user?._id
+		return this.productsService.findAll(query, userId)
 	}
 
 	@ApiOperation({ summary: 'Получить товар по ID' })
 	@ApiParam({ name: 'id', description: 'ID товара', example: '665a1b2c3d4e5f6a7b8c9d0e' })
 	@ApiResponse({ status: 200, description: 'Данные товара', type: ProductResponseDto })
 	@ApiResponse({ status: 404, description: 'Товар не найден' })
+	@UseGuards(OptionalJwtAuthGuard)
 	@Get('/products/:id')
-	findById(@Param('id') id: string) {
-		return this.productsService.findById(id)
+	findById(@Param('id') id: string, @Req() req: Request) {
+		const userId = (req as any).user?._id
+		return this.productsService.findById(id, userId)
 	}
 
 	// ==================== Admin ====================
