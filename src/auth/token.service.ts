@@ -13,11 +13,11 @@ export class TokensService {
 
 	generateTokens(payload: { _id: string; login: string; email: string; role: string }) {
 		const accessToken = this.jwtService.sign(payload, {
-			expiresIn: '15s',
+			expiresIn: '15s', // 2d
 		})
 
 		const refreshToken = this.jwtService.sign(payload, {
-			expiresIn: '35s',
+			expiresIn: '35s', // 7d
 		})
 
 		return { accessToken, refreshToken }
@@ -25,7 +25,7 @@ export class TokensService {
 
 	setRefreshTokenCookie(res: Response, tokenType: TokenType, token: string) {
 		const isProduction = process.env.NODE_ENV === 'production'
-		const day = tokenType === TokenType.ACCESS ? 2 : 7
+		const day = tokenType === TokenType.ACCESS ? 0.0014 : 0.0035 // 2 / 7
 		res.cookie(tokenType, token, {
 			httpOnly: tokenType === TokenType.REFRESH,
 			secure: isProduction,
