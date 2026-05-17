@@ -13,11 +13,11 @@ export class TokensService {
 
 	generateTokens(payload: { _id: string; login: string; email: string; role: string }) {
 		const accessToken = this.jwtService.sign(payload, {
-			expiresIn: '1d',
+			expiresIn: '15s',
 		})
 
 		const refreshToken = this.jwtService.sign(payload, {
-			expiresIn: '7d',
+			expiresIn: '35s',
 		})
 
 		return { accessToken, refreshToken }
