@@ -73,7 +73,6 @@ export class AuthController {
 		},
 	})
 	@ApiResponse({ status: 401, description: 'Не авторизован / Токен недействителен' })
-	@UseGuards(JwtAuthGuard)
 	@Post('/refresh')
 	async refresh(
 		@Req() req: Request,
