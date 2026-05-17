@@ -100,18 +100,13 @@ export class AuthService {
 			throw new HttpException('Пользователь не найден', HttpStatus.UNAUTHORIZED)
 		}
 
-		const { accessToken, refreshToken } = this.tokensService.generateTokens({
+		const accessToken = this.tokensService.generateAccessToken({
 			_id: user?._id?.toString(),
 			login: user.login,
 			email: user.email,
 			role: user.role,
 		})
 
-		this.tokensService.setRefreshTokenCookie(
-			res,
-			TokenType.REFRESH,
-			refreshToken
-		)
 		this.tokensService.setRefreshTokenCookie(res, TokenType.ACCESS, accessToken)
 
 		return {

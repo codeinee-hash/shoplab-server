@@ -11,10 +11,14 @@ export enum TokenType {
 export class TokensService {
 	constructor(private jwtService: JwtService) { }
 
-	generateTokens(payload: { _id: string; login: string; email: string; role: string }) {
-		const accessToken = this.jwtService.sign(payload, {
+	generateAccessToken(payload: { _id: string; login: string; email: string; role: string }) {
+		return this.jwtService.sign(payload, {
 			expiresIn: '15s', // 2d
 		})
+	}
+
+	generateTokens(payload: { _id: string; login: string; email: string; role: string }) {
+		const accessToken = this.generateAccessToken(payload)
 
 		const refreshToken = this.jwtService.sign(payload, {
 			expiresIn: '35s', // 7d
