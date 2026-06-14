@@ -16,9 +16,9 @@ export class UsersService implements OnModuleInit {
 	}
 
 	private async seedAdmin() {
-		const adminLogin = process.env.ADMIN_LOGIN || 'admin'
-		const adminEmail = process.env.ADMIN_EMAIL || 'admin@shoplab.com'
-		const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
+		const adminLogin = process.env.ADMIN_LOGIN || ''
+		const adminEmail = process.env.ADMIN_EMAIL || ''
+		const adminPassword = process.env.ADMIN_PASSWORD || ''
 
 		const existingAdmin = await this.userModel.findOne({
 			$or: [{ login: adminLogin }, { email: adminEmail }],

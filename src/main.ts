@@ -17,7 +17,7 @@ async function run() {
 	app.useGlobalPipes(new ValidationPipe())
 
 	const config = new DocumentBuilder()
-		.setTitle('ShopLab API')
+		.setTitle('Shop API')
 		.setDescription(
 			'REST API для учебного интернет-магазина. ' +
 			'Включает авторизацию, товары, категории, корзину, избранное и заказы. ' +
